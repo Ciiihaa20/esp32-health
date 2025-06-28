@@ -4,49 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Monitoring Kesehatan</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      text-align: center;
-      padding: 30px;
-    }
-    h1 {
-      color: #333;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin: 20px auto;
-      max-width: 400px;
-    }
-    .label {
-      font-weight: bold;
-      color: #666;
-    }
-    .value {
-      font-size: 24px;
-      color: #e53935;
-    }
-  </style>
 </head>
 <body>
   <h1>Monitoring HR & RR</h1>
-  <div class="card">
-    <div class="label">HR (bpm):</div>
-    <div class="value" id="hr">--</div>
-    <div class="label">RR (bpm):</div>
-    <div class="value" id="rr">--</div>
-    <div class="label">Status Kesehatan:</div>
-    <div class="value" id="kondisi">--</div>
-  </div>
+  <p>HR: <span id="hr">--</span></p>
+  <p>RR: <span id="rr">--</span></p>
+  <p>Status: <span id="kondisi">--</span></p>
 
-  <!-- ✅ Load Paho MQTT Library -->
+  <!-- ✅ Wajib load library ini dulu -->
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
 
-  <!-- ✅ Load your JS file -->
+  <!-- ✅ Lalu script.js kamu -->
   <script src="script.js"></script>
 </body>
 </html>
