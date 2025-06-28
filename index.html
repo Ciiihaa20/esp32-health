@@ -2,77 +2,18 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Monitoring Kesehatan</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    h1 {
-      margin-top: 50px;
-      font-size: 28px;
-      color: #333;
-      font-weight: bold;
-    }
-
-    .container {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .info-card {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .info-card p {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #555;
-    }
-
-    .value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #d32f2f;
-    }
-  </style>
 </head>
 <body>
-  <h1>Monitoring Laju Pernapasan dan Detak Jantung</h1>
-  <div class="container">
-    <div class="info-card">
-      <p>HR (Detak Jantung):</p>
-      <div class="value" id="hr">--</div>
-    </div>
-    <div class="info-card">
-      <p>RR (Laju Napas):</p>
-      <div class="value" id="rr">--</div>
-    </div>
-    <div class="info-card">
-      <p><strong>Kondisi Kesehatan:</strong></p>
-      <div class="value" id="kondisi">--</div>
-    </div>
-  </div>
+  <h1>Monitoring HR dan RR</h1>
+  <p>HR: <span id="hr">--</span></p>
+  <p>RR: <span id="rr">--</span></p>
+  <p>Status: <span id="kondisi">--</span></p>
 
-  <!-- ✅ MQTT library -->
-  <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+  <!-- Load library MQTT dulu -->
+  <script src="https://cdn.jsdelivr.net/npm/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
 
-  <!-- ✅ JavaScript utama -->
+  <!-- Script JS kamu -->
   <script>
     const hrEl = document.getElementById("hr");
     const rrEl = document.getElementById("rr");
@@ -81,7 +22,7 @@
     const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "client-" + Math.random());
 
     client.onConnectionLost = (response) => {
-      console.error("Koneksi MQTT terputus:", response.errorMessage);
+      console.error("Koneksi terputus:", response.errorMessage);
     };
 
     client.onMessageArrived = (message) => {
@@ -91,17 +32,17 @@
         rrEl.textContent = data.rr + " bpm";
         kondisiEl.textContent = data.status;
       } catch (e) {
-        console.error("Format data tidak valid:", e);
+        console.error("Data tidak valid:", e);
       }
     };
 
     client.connect({
       onSuccess: () => {
-        console.log("✅ Tersambung ke broker MQTT");
+        console.log("Tersambung ke MQTT");
         client.subscribe("LAJUPERNAPASANDETAKJANTUNG");
       },
       onFailure: (err) => {
-        console.error("❌ Gagal koneksi MQTT:", err);
+        console.error("Gagal koneksi MQTT:", err);
       }
     });
   </script>
