@@ -6,106 +6,47 @@
   <title>Monitoring Kesehatan</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 30px;
     }
-
     h1 {
-      margin-top: 50px;
-      font-size: 28px;
       color: #333;
-      font-weight: bold;
     }
-
-    .container {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 90%;
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 20px auto;
       max-width: 400px;
     }
-
-    .info-card {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    .label {
+      font-weight: bold;
+      color: #666;
     }
-
-    .info-card p {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #555;
-    }
-
     .value {
       font-size: 24px;
-      font-weight: bold;
-      color: #d32f2f;
+      color: #e53935;
     }
   </style>
-
-  <!-- ✅ Paho MQTT LIBRARY -->
-  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
 </head>
-
 <body>
-  <h1>Monitoring Laju Pernapasan dan Detak Jantung</h1>
-  <div class="container">
-    <div class="info-card">
-      <p>HR (bpm/menit):</p>
-      <div class="value" id="hr">--</div>
-    </div>
-    <div class="info-card">
-      <p>RR (bpm/menit):</p>
-      <div class="value" id="rr">--</div>
-    </div>
-    <div class="info-card">
-      <p><strong>Kondisi:</strong></p>
-      <div class="value" id="kondisi">--</div>
-    </div>
+  <h1>Monitoring HR & RR</h1>
+  <div class="card">
+    <div class="label">HR (bpm):</div>
+    <div class="value" id="hr">--</div>
+    <div class="label">RR (bpm):</div>
+    <div class="value" id="rr">--</div>
+    <div class="label">Status Kesehatan:</div>
+    <div class="value" id="kondisi">--</div>
   </div>
 
-  <!-- ✅ JS Langsung (JANGAN PAKAI script.js TERPISAH) -->
-  <script>
-    const hrEl = document.getElementById("hr");
-    const rrEl = document.getElementById("rr");
-    const kondisiEl = document.getElementById("kondisi");
+  <!-- ✅ Load Paho MQTT Library -->
+  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
 
-    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "client-" + Math.random());
-
-    client.onConnectionLost = (response) => {
-      console.error("Koneksi MQTT terputus:", response.errorMessage);
-    };
-
-    client.onMessageArrived = (message) => {
-      try {
-        const data = JSON.parse(message.payloadString);
-        hrEl.textContent = data.hr + " bpm";
-        rrEl.textContent = data.rr + " bpm";
-        kondisiEl.textContent = data.status;
-        console.log("Data diterima:", data);
-      } catch (e) {
-        console.error("Gagal parse data MQTT:", e);
-      }
-    };
-
-    client.connect({
-      onSuccess: () => {
-        console.log("Tersambung ke broker MQTT");
-        client.subscribe("LAJUPERNAPASANDETAKJANTUNG");
-      },
-      onFailure: (err) => {
-        console.error("Koneksi MQTT gagal:", err);
-      }
-    });
-  </script>
+  <!-- ✅ Load your JS file -->
+  <script src="script.js"></script>
 </body>
 </html>
