@@ -56,21 +56,54 @@
   <h1>Monitoring Laju Pernapasan dan Detak Jantung</h1>
   <div class="container">
     <div class="info-card">
-      <p>HR (bpm/menit):</p>
+      <p>HR (Detak Jantung):</p>
       <div class="value" id="hr">--</div>
     </div>
     <div class="info-card">
-      <p>RR (bpm/menit):</p>
+      <p>RR (Laju Napas):</p>
       <div class="value" id="rr">--</div>
     </div>
     <div class="info-card">
-      <p><strong>Kondisi:</strong></p>
+      <p><strong>Kondisi Kesehatan:</strong></p>
       <div class="value" id="kondisi">--</div>
     </div>
   </div>
 
-  <!-- MQTT library -->
+  <!-- ✅ MQTT library -->
   <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
-  <script src="script.js"></script>
+
+  <!-- ✅ JavaScript utama -->
+  <script>
+    const hrEl = document.getElementById("hr");
+    const rrEl = document.getElementById("rr");
+    const kondisiEl = document.getElementById("kondisi");
+
+    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "client-" + Math.random());
+
+    client.onConnectionLost = (response) => {
+      console.error("Koneksi MQTT terputus:", response.errorMessage);
+    };
+
+    client.onMessageArrived = (message) => {
+      try {
+        const data = JSON.parse(message.payloadString);
+        hrEl.textContent = data.hr + " bpm";
+        rrEl.textContent = data.rr + " bpm";
+        kondisiEl.textContent = data.status;
+      } catch (e) {
+        console.error("Format data tidak valid:", e);
+      }
+    };
+
+    client.connect({
+      onSuccess: () => {
+        console.log("✅ Tersambung ke broker MQTT");
+        client.subscribe("LAJUPERNAPASANDETAKJANTUNG");
+      },
+      onFailure: (err) => {
+        console.error("❌ Gagal koneksi MQTT:", err);
+      }
+    });
+  </script>
 </body>
 </html>
