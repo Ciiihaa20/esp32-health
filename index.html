@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monitoring Kesehatan</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-size: 28px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .container {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .info-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-card p {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monitoring Laju Pernapasan dan Detak Jantung</h1>
+  <div class="container">
+    <div class="info-card">
+      <p>HR (bpm/menit):</p>
+      <div class="value" id="hr">--</div>
+    </div>
+    <div class="info-card">
+      <p>RR (bpm/menit):</p>
+      <div class="value" id="rr">--</div>
+    </div>
+    <div class="info-card">
+      <p><strong>Kondisi:</strong></p>
+      <div class="value" id="kondisi">--</div>
+    </div>
+  </div>
+
+  <!-- MQTT library -->
+  <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
