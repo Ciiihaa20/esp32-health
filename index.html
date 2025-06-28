@@ -52,7 +52,7 @@
     }
   </style>
 
-  <!-- ✅ Library Paho MQTT -->
+  <!-- ✅ Paho MQTT LIBRARY -->
   <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
 </head>
 
@@ -73,7 +73,39 @@
     </div>
   </div>
 
-  <!-- ✅ Script.js (HARUS SETELAH Paho) -->
-  <script src="script.js"></script>
+  <!-- ✅ JS Langsung (JANGAN PAKAI script.js TERPISAH) -->
+  <script>
+    const hrEl = document.getElementById("hr");
+    const rrEl = document.getElementById("rr");
+    const kondisiEl = document.getElementById("kondisi");
+
+    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "client-" + Math.random());
+
+    client.onConnectionLost = (response) => {
+      console.error("Koneksi MQTT terputus:", response.errorMessage);
+    };
+
+    client.onMessageArrived = (message) => {
+      try {
+        const data = JSON.parse(message.payloadString);
+        hrEl.textContent = data.hr + " bpm";
+        rrEl.textContent = data.rr + " bpm";
+        kondisiEl.textContent = data.status;
+        console.log("Data diterima:", data);
+      } catch (e) {
+        console.error("Gagal parse data MQTT:", e);
+      }
+    };
+
+    client.connect({
+      onSuccess: () => {
+        console.log("Tersambung ke broker MQTT");
+        client.subscribe("LAJUPERNAPASANDETAKJANTUNG");
+      },
+      onFailure: (err) => {
+        console.error("Koneksi MQTT gagal:", err);
+      }
+    });
+  </script>
 </body>
 </html>
