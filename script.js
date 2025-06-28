@@ -1,1 +1,2 @@
+Menghapus file script.js
 
