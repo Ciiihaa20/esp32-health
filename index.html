@@ -2,19 +2,99 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Monitoring Kesehatan</title>
+  <title>Monitor Kesehatan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --soft-pink: #fce4ec;
+      --soft-blue: #e3f2fd;
+      --dark-text: #2c3e50;
+      --accent-red: #e57373;
+      --accent-blue: #64b5f6;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, var(--soft-pink), var(--soft-blue));
+      margin: 0;
+      padding: 20px;
+      color: var(--dark-text);
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background-color: #ffffffcc;
+      border-radius: 14px;
+      padding: 20px 30px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    .card p {
+      font-size: 32px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    #chartContainer {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: #ffffffcc;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <h1>Monitoring HR & RR</h1>
-  <p>HR: <span id="hr">--</span></p>
-  <p>RR: <span id="rr">--</span></p>
-  <p>Status: <span id="kondisi">--</span></p>
+  <h1>Pengukuran Laju Pernapasan Dan Detak Jantung Pada Kondisi Kesehatan</h1>
 
-  <!-- ✅ Wajib load library ini dulu -->
-  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+  <div class="container">
+    <div class="card">
+      <h2>Detak Jantung</h2>
+      <p id="hr">-- bpm</p>
+    </div>
+    <div class="card">
+      <h2>Laju Napas</h2>
+      <p id="rr">-- rpm</p>
+    </div>
+    <div class="card">
+      <h2>Kondisi</h2>
+      <p id="status">Menunggu...</p>
+    </div>
+  </div>
 
-  <!-- ✅ Lalu script.js kamu -->
+  <div id="chartContainer">
+    <canvas id="chartHRRR" height="200"></canvas>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
