@@ -30,9 +30,7 @@ const chart = new Chart(ctx, {
   },
   options: {
     responsive: true,
-    animation: {
-      duration: 500
-    },
+    animation: { duration: 500 },
     plugins: {
       legend: {
         labels: {
@@ -43,9 +41,7 @@ const chart = new Chart(ctx, {
     scales: {
       y: {
         beginAtZero: true,
-        ticks: {
-          stepSize: 10
-        }
+        ticks: { stepSize: 10 }
       }
     }
   }
@@ -53,31 +49,47 @@ const chart = new Chart(ctx, {
 
 let counter = 0;
 
-setInterval(() => {
-  const hr = Math.floor(Math.random() * 40) + 60; // 60–100 bpm
-  const rr = Math.floor(Math.random() * 10) + 12; // 12–22 rpm
+// Inisialisasi MQTT
+const clientID = "webClient-" + Math.random().toString(16).substr(2, 8);
+const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, clientID);
 
-  hrElement.textContent = `${hr} bpm`;
-  rrElement.textContent = `${rr} rpm`;
+client.onConnectionLost = (response) => {
+  console.error("Koneksi MQTT terputus:", response.errorMessage);
+};
 
-  let kondisi = '';
-  if (hr < 60 || rr < 12) {
-    kondisi = 'Tidak Sehat';
-  } else if (hr > 100 || rr > 22) {
-    kondisi = 'Cukup Sehat';
-  } else {
-    kondisi = 'Sehat';
+client.onMessageArrived = (message) => {
+  try {
+    const data = JSON.parse(message.payloadString);
+    const hr = parseFloat(data.hr);
+    const rr = parseFloat(data.rr);
+    const status = data.status || 'Tidak diketahui';
+
+    hrElement.textContent = `${hr} bpm`;
+    rrElement.textContent = `${rr} rpm`;
+    statusElement.textContent = status;
+
+    // Tambahkan data ke grafik
+    if (labels.length > 20) {
+      labels.shift();
+      hrData.shift();
+      rrData.shift();
+    }
+
+    labels.push(counter++);
+    hrData.push(hr);
+    rrData.push(rr);
+    chart.update();
+
+    console.log("Data MQTT:", data);
+  } catch (err) {
+    console.error("Gagal parsing data:", err);
   }
-  statusElement.textContent = kondisi;
+};
 
-  if (labels.length > 20) {
-    labels.shift();
-    hrData.shift();
-    rrData.shift();
-  }
-
-  labels.push(counter++);
-  hrData.push(hr);
-  rrData.push(rr);
-  chart.update();
-}, 2000);
+client.connect({
+  onSuccess: () => {
+    console.log("Terhubung ke broker MQTT");
+    client.subscribe("LAJUPERNAPASANDETAKJANTUNG");
+  },
+  useSSL: false
+});
